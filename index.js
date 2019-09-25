@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieSession = require('cookie-session');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 
 const keys = require('./config/keys');
 require('./models/User');
@@ -18,16 +19,20 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.json());
 
 require('./routes/authRoutes')(app);
+require('./routes/billingRoutes')(app);
+
+if (process.env.NODE_ENV === 'production') {
+  //Express will serve up production assets
+  app.use(express.static('client/build'));
+  //Express will serve up index.html if it does not recognize the route
+  const path = require('path');
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
-
-//dbprod user: dbEmaily-prod
-// password qOIEtKTBl09Ov8B9
-
-// mongodb+srv://dbEmaily-prod:qOIEtKTBl09Ov8B9@emaily-prod-1rcjy.mongodb.net/test?retryWrites=true&w=majority
-
-//ClientId 1059653778285-3cqhqhcpcpsch2ppsl30jhfb6lv34qlb.apps.googleusercontent.com
-// Secret NRMjwz4dROlQRk7NIjafHc-e
