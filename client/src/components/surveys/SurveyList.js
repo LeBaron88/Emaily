@@ -15,7 +15,7 @@ class surveyList extends React.Component {
             <span className="card-title">{survey.title}</span>
             <p>{survey.body}</p>
             <p className="right">
-              Sent On: {new Date(survey.dateSent).toLocaleDateString()}
+              Sent on: {new Date(survey.dateSent).toLocaleDateString()}
             </p>
           </div>
           <div className="card-action">
